@@ -1,0 +1,23 @@
+name: flutter_examples_workspace
+description: Laboratório de arquitetura e catálogo de exemplos em Flutter, organizado como pub workspace.
+publish_to: none
+
+environment:
+  sdk: ^3.13.0
+
+# Lista de membros do workspace. Ainda vazia porque não existe nenhum pacote.
+#
+# Um glob aqui DEVE casar ao menos um pacote — glob que não casa nada aborta a resolução
+# com "No workspace packages matching". Por isso os globs abaixo só entram quando o
+# primeiro pacote da pasta correspondente for criado:
+#
+#   workspace:
+#     - apps/**       # descomente ao criar o primeiro app
+#     - packages/**   # descomente ao criar o primeiro pacote
+#
+# Depois disso o glob é recursivo e absorve tudo: criar um diretório com pubspec.yaml
+# passa a bastar. Ver docs/adr/001-adotar-pub-workspace.md e docs/conventions/packages.md.
+workspace: []
+
+dev_dependencies:
+  flutter_lints: ^6.0.0

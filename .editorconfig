@@ -1,0 +1,25 @@
+# ----------------------------------------------------------------------------------------------------------------------
+# Convenção de formatação compartilhada entre IntelliJ, VS Code e editores compatíveis.
+# Limite de 120 colunas em Dart, YAML e Markdown.
+# ----------------------------------------------------------------------------------------------------------------------
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{yaml,yml}]
+indent_size = 2
+max_line_length = 120
+
+[*.dart]
+indent_size = 2
+max_line_length = 120
+
+# Quebra de linha com dois espaços no fim e sintaxe em Markdown.
+[*.md]
+trim_trailing_whitespace = false
+max_line_length = 120
