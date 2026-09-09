@@ -7,27 +7,25 @@ root = true
 [*]
 charset = utf-8
 end_of_line = lf
-indent_size = 4
 indent_style = space
-insert_final_newline = false
-max_line_length = 80
-tab_width = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
 
 [*.dart]
 indent_size = 2
 max_line_length = 120
 
+[{*.yaml,*.yml}]
+indent_size = 2
+max_line_length = 120
+
+[{*.json,*.jsonc,*.graphqlconfig,*.graphqlrc}]
+indent_size = 2
+
 [{*.gql,*.graphql,*.graphqls}]
 indent_size = 2
-tab_width = 2
 
-[{*.graphqlconfig,*.graphqlrc,*.har,*.json,*.jsonc}]
-indent_size = 2
-
-[{*.markdown,*.md}]
+# Markdown é exceção ao trim: dois espaços no fim da linha são quebra de linha forçada, ou seja, sintaxe e não sujeira.
+[{*.md,*.markdown}]
 max_line_length = 120
 trim_trailing_whitespace = false
-
-[{*.yaml,*.yml,.clang-format,.clang-tidy,_clang-format,pubspec.lock}]
-indent_size = 2
-max_line_length = 120
