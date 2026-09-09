@@ -1,44 +1,42 @@
+# ----------------------------------------------------------------------------------------------------------------------
+# Padrão de análise estática ÚNICO do workspace — o único analysis_options.yaml versionado. Arquivo local em pacote,
+# app ou exemplo é PROIBIDO, mesmo reduzido a um include:. O analisador resolve este arquivo subindo os diretórios.
+# Racional das convenções: docs/conventions/dart-style.md.
+# ----------------------------------------------------------------------------------------------------------------------
 include: package:flutter_lints/flutter.yaml
 
+# Largura de 120 colunas.
 formatter:
   page_width: 120
 
 analyzer:
-  exclude:
-    - build/**
-    - android/**
-    - ios/**
-    - web/**
-    - windows/**
-    - macos/**
-    - linux/**
-
   language:
     strict-casts: true
     strict-inference: true
     strict-raw-types: true
 
-errors:
-  invalid_annotation_target: ignore
-  missing_required_param: error
-  missing_return: error
-  body_might_complete_normally_nullable: error
-  implementation_imports: error
-  unawaited_futures: error
-  todo: ignore
+  errors:
+    invalid_annotation_target: ignore
+    missing_required_param: error
+    missing_return: error
+    body_might_complete_normally_nullable: error
+    implementation_imports: error
+    unawaited_futures: error
+    todo: ignore
 
-exclude:
-  - "*/.g.dart"
-  - "*/.freezed.dart"
-  - "*/.mocks.dart"
-  - "**/generated_plugin_registrant.dart"
-  - "build/**"
-  - android/**
-  - ios/**
-  - web/**
-  - windows/**
-  - macos/**
-  - linux/**
+  # Padrões RECURSIVOS de propósito.
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "**/*.mocks.dart"
+    - "**/generated_plugin_registrant.dart"
+    - "**/build/**"
+    - "**/android/**"
+    - "**/ios/**"
+    - "**/web/**"
+    - "**/windows/**"
+    - "**/macos/**"
+    - "**/linux/**"
 
 linter:
   rules:
@@ -51,6 +49,7 @@ linter:
     avoid_setters_without_getters: true
     avoid_field_initializers_in_const_classes: true
     avoid_equals_and_hash_code_on_mutable_classes: true
+
     always_declare_return_types: true
     type_annotate_public_apis: true
     avoid_dynamic_calls: true
@@ -62,16 +61,22 @@ linter:
     prefer_initializing_formals: false
     always_specify_types: false
     omit_local_variable_types: false
+    omit_obvious_property_types: false
+    specify_nonobvious_local_variable_types: true
+    specify_nonobvious_property_types: true
+
     avoid_void_async: true
     await_only_futures: true
     unawaited_futures: true
     discarded_futures: false
     use_build_context_synchronously: true
+
     use_key_in_widget_constructors: true
     sized_box_for_whitespace: true
     avoid_unnecessary_containers: true
     use_colored_box: true
     use_decorated_box: true
+
     require_trailing_commas: true
     prefer_single_quotes: true
     directives_ordering: true
@@ -83,6 +88,7 @@ linter:
     unnecessary_lambdas: true
     unnecessary_parenthesis: true
     cascade_invocations: false
+
     avoid_print: true
     avoid_catches_without_on_clauses: true
     avoid_catching_errors: true

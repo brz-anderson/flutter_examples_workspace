@@ -20,6 +20,7 @@ packages/
 docs/
   adr/         decisões de arquitetura e o porquê delas
   conventions/ manuais de implementação
+tool/          scripts de verificação
 ```
 
 A dependência flui em uma direção só: `apps/` → `features/` → `design/` → `core/`.
@@ -50,6 +51,19 @@ environment:
 ```
 
 Detalhes em [`docs/conventions/packages.md`](docs/conventions/packages.md).
+
+## Como verificar a topologia
+
+```sh
+./tool/check_topology.sh
+```
+
+Confere, da raiz, as regras de topologia que dão para verificar por ferramenta: import contra a direção das camadas,
+feature importando outra feature, import de `src/` de outro pacote e a nomenclatura de arquivo e de classe. Sai com
+`1` na presença de violação, então serve como passo de verificação antes de abrir pull request.
+
+A checagem de camada é derivada do campo `name:` de cada `pubspec.yaml` — nada é hard-coded, e um pacote novo entra
+na verificação sozinho.
 
 ## Requisitos
 
