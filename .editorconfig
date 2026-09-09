@@ -4,11 +4,15 @@
 # ----------------------------------------------------------------------------------------------------------------------
 root = true
 
+# O indent 4 governa o código nativo que o `flutter create` despeja em android/ e ios/ — Kotlin, Swift, Gradle KTS e
+# XML de Android usam 4. O que este repo escreve à mão tem bloco próprio abaixo, com 2.
 [*]
 charset = utf-8
 end_of_line = lf
+indent_size = 4
 indent_style = space
 insert_final_newline = true
+tab_width = 4
 trim_trailing_whitespace = true
 
 [*.dart]
@@ -23,6 +27,10 @@ max_line_length = 120
 indent_size = 2
 
 [{*.gql,*.graphql,*.graphqls}]
+indent_size = 2
+
+# Os scripts de tool/ usam 2; o 4 do bloco [*] existe para o código nativo.
+[*.sh]
 indent_size = 2
 
 # Markdown é exceção ao trim: dois espaços no fim da linha são quebra de linha forçada, ou seja, sintaxe e não sujeira.
