@@ -1,7 +1,8 @@
 # Convenções de código Dart
 
-Manual de implementação. É norma: divergência no código é bug, não preferência. O porquê de cada regra durável vive
-num ADR — veja o [índice](../adr/README.md).
+Manual de implementação. É norma: divergência no código é bug, não preferência. O porquê de cada regra durável vive num
+ADR — veja o [índice](../adr/README.md). As regras de lint que automatizam parte destas convenções estão em
+[`lint-rules.md`](lint-rules.md).
 
 ## Formatação e largura de linha
 
@@ -14,8 +15,8 @@ formatter:
 
 **Regras:**
 
-- `dart format` **DEVE** ser executado após criar ou modificar qualquer arquivo `.dart`, aplicando somente aos
-  arquivos modificados no comando atual.
+- `dart format` **DEVE** ser executado após criar ou modificar qualquer arquivo `.dart`, aplicando somente aos arquivos
+  modificados no comando atual.
 - Com o `page_width` no `analysis_options.yaml`, `dart format <arquivo>` já usa 120 colunas. Para forçar em um comando
   avulso, a flag é `--page-width=120` (`--line-length` ainda é aceito, mas é o nome antigo).
 - É **ESTRITAMENTE PROIBIDO** fazer commit sem passar pelo `dart format`.
@@ -42,19 +43,64 @@ Order copyWith({String? id}) {
 
 ## Imutabilidade, `const` e tipagem
 
-- Tipo explícito **DEVE** ser declarado em toda variável, constante, propriedade, parâmetro e retorno. `var` e
-  inferência em declarações são **PROIBIDOS**, o que o lint `always_specify_types` faz o analisador cobrar.
+- Tipo explícito **DEVE** ser declarado sempre que ele **não for óbvio** no lado direito da atribuição — retorno de
+  função, resultado de `await`, valor vindo de outro pacote. Quando o tipo já está escrito ali (`'ana'`, `<String>[]`,
+  `0`), anotar é ruído e o lint acusa. É o que os lints `specify_nonobvious_local_variable_types` e
+  `specify_nonobvious_property_types` cobram; `always_specify_types` e `omit_local_variable_types`, os dois extremos,
+  ficam desligados de propósito.
 - Toda classe de modelo (entidade, Model, State, Failure) **DEVE** ter construtor `const` e todos os campos `final`.
 - **NÃO use Freezed.** Implemente `copyWith` manualmente, preservando a imutabilidade.
 
-O racional de `always_specify_types` é que num monorepo o tipo inferido de um retorno atravessa fronteira de pacote
-sem aparecer em lugar nenhum do código que o consome — quem lê a chamada não tem como saber o que recebeu sem abrir a
-implementação. O custo é verbosidade; o ganho é que a assinatura passa a ser o contrato.
+O racional é que num monorepo o tipo inferido de um retorno atravessa fronteira de pacote sem aparecer em lugar nenhum
+do código que o consome — quem lê a chamada não tem como saber o que recebeu sem abrir a implementação. Anotado, a
+assinatura passa a ser o contrato. Onde o tipo já é visível, essa troca não existe, e por isso a anotação não é cobrada.
+
+```dart
+// ✅ Correto — óbvio à direita, sem anotação
+final name = 'ana';
+final items = <String>[];
+
+// ✅ Correto — o tipo vem de uma chamada, então é anotado
+final ColorScheme scheme = Theme.of(context).colorScheme;
+final Result<Order, OrderFailure> result = await repository.findById(id);
+```
 
 ## Espaçamento entre fields de classe e members de interface
 
 - **DEVE haver exatamente uma linha em branco entre cada field de classe** e entre o último field e o primeiro método.
 - Esta regra também se aplica a **interfaces**: uma linha em branco entre cada método/getter.
+
+## Nomes de arquivo e de classe
+
+Arquivo em `snake_case`, classe em `UpperCamelCase`. Além disso:
+
+| Artefato                      | Classe                          | Arquivo                                          |
+| :---------------------------- | :------------------------------ | :----------------------------------------------- |
+| Contrato de repositório       | `AuthRepository`                | `domain/repositories/auth_repository.dart`       |
+| Implementação do repositório  | `AuthRepositoryImpl`            | `data/repositories/auth_repository.dart`         |
+| Fonte de dado remota          | `AuthRemote`                    | `data/datasources/auth_remote.dart`              |
+| Fonte de dado local           | `AuthStorage`                   | `data/datasources/auth_storage.dart`             |
+| Model com `fromJson`/`toJson` | `UserModel`                     | `data/models/user_model.dart`                    |
+| Página                        | `HomePage`                      | `presentation/pages/home_page.dart`              |
+| Dialog                        | `ConfirmDialog`                 | `presentation/overlays/confirm_dialog.dart`      |
+| Bottom sheet                  | `FilterBottomSheet`             | `presentation/overlays/filter_bottom_sheet.dart` |
+| Widget privado de uma página  | `_HomeHeader`, no mesmo arquivo | — (`widgets/` só a partir de 2 usos)             |
+
+**Regras:**
+
+- **O arquivo da implementação conserva o nome do contrato.** Só a **classe** recebe o sufixo `Impl`; o sufixo `_impl`
+  em nome de arquivo é **PROIBIDO**. O diretório já distingue `domain/` de `data/`, e repetir isso no nome é
+  redundância.
+- É **PROIBIDO** `Datasource` ou `DataSource` em nome de classe ou de arquivo. O diretório `data/datasources/` é a única
+  ocorrência permitida do termo; a classe usa o sufixo `Remote` ou `Storage`, que diz de onde o dado vem.
+- É **PROIBIDO** o prefixo `I` em interface — `AuthRepository`, não `IAuthRepository`.
+- É **PROIBIDO** nome de arquivo começando com `_`. A privacidade em Dart é do símbolo, não do arquivo; um arquivo
+  privado é uma convenção de outra linguagem trazida por engano.
+- `overlays/` agrupa o que sobrepõe a tela sem ser rota navegável (dialog e bottom sheet). `pages/` contém só tela
+  completa associada a uma rota.
+
+O que dessas regras dá para verificar por ferramenta está no `./tool/check_topology.sh`, que **DEVE** passar antes de
+abrir pull request.
 
 ## Imports e organização
 
@@ -156,11 +202,11 @@ final class EmailValidator implements Validator<String> {
 **Regras:**
 
 - Toda classe com API estática substituível **DEVE** oferecer o par `mock` e `resetMock`, ambos anotados com
-  `@visibleForTesting`. Oferecer só o `mock` é **PROIBIDO**: sem o `resetMock`, um teste vaza estado para o seguinte e
-  a suíte passa a depender da ordem de execução.
-- É **ESTRITAMENTE PROIBIDO** chamar `mock` ou `resetMock` em código de produção. A anotação `@visibleForTesting` faz
-  o analisador acusar a violação.
+  `@visibleForTesting`. Oferecer só o `mock` é **PROIBIDO**: sem o `resetMock`, um teste vaza estado para o seguinte e a
+  suíte passa a depender da ordem de execução.
+- É **ESTRITAMENTE PROIBIDO** chamar `mock` ou `resetMock` em código de produção. A anotação `@visibleForTesting` faz o
+  analisador acusar a violação.
 - É **PROIBIDO** criar API estática apenas para evitar injeção. A estática é exceção, não conveniência: se existe um
   construtor onde a dependência caberia, use-o.
-- O par `mock`/`resetMock` **NÃO** substitui a interface. A classe continua implementando seu contrato, para que o
-  dublê seja um `Mock` comum de `mocktail` e não uma subclasse improvisada.
+- O par `mock`/`resetMock` **NÃO** substitui a interface. A classe continua implementando seu contrato, para que o dublê
+  seja um `Mock` comum de `mocktail` e não uma subclasse improvisada.

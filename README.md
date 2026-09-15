@@ -75,3 +75,4 @@ Flutter 3.47.1 / Dart 3.13.1 ou superior. O piso não é arbitrário: o glob na 
 - [Decisões de arquitetura (ADR)](docs/adr/README.md)
 - [Convenções de código Dart](docs/conventions/dart-style.md)
 - [Convenções de pacotes](docs/conventions/packages.md)
+- [Regras de lint](docs/conventions/lint-rules.md)

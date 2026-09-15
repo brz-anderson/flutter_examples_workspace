@@ -73,19 +73,19 @@ motivo.
 
 Idem.
 
-## Proposta de emenda à constituição
+## Proposta de emenda ao manual
 
-> Só quando a decisão contradiz norma já escrita na [`CONSTITUTION.md`](../../CONSTITUTION.md) ou num manual de
-> [`architecture/`](../architecture/) ou [`conventions/`](../conventions/). Se ela não contradiz nada, apague a seção
-> inteira. Um ponto numerado por trecho a emendar, dizendo qual documento, o que está lá hoje e o que passa a valer.
+> Só quando a decisão contradiz norma já escrita num manual de [`conventions/`](../conventions/) ou no
+> [`README.md`](../../README.md) da raiz. Se ela não contradiz nada, apague a seção inteira. Um ponto numerado por
+> trecho a emendar, dizendo qual documento, o que está lá hoje e o que passa a valer.
 >
 > Quando a emenda já tiver sido aplicada no mesmo trabalho, o título vira
 > `## Emenda ao manual — aplicada em AAAA-MM-DD`, o corpo relata o que foi feito, e uma linha `Falta:` no fim registra o
 > que ficou pendente.
 
-Esta seção **propõe**; não altera nada. A emenda segue o processo da Seção 7, em pull request próprio.
+Esta seção **propõe**; não altera nada. A emenda entra em pull request próprio.
 
-1. **Seção N** — o trecho que está lá hoje e o que passa a valer.
+1. **`conventions/<arquivo>.md`, seção N** — o trecho que está lá hoje e o que passa a valer.
 
 Nada disso é feito por iniciativa de quem encontrar a divergência.
 
